@@ -25,9 +25,8 @@ pub fn TexturePacker(comptime T: anytype, comptime W: i32, comptime H: i32) type
         /// A rectangle position in the packed texture.
         pub const RectPos = struct { x: usize, y: usize, w: usize, h: usize };
         /// Error thrown when no place can't be fill, or the pushed bitmap 
-        /// is way larger than the total packer size or the pushed bitmap dismatch 
-        /// the given width/height.
-        pub const PackerError = error{ isFull, bitmapTooLarge, dataDismatch };
+        /// is way larger than the total packer size. 
+        pub const PackerError = error{ isFull, bitmapTooLarge };
 
         const Self = @This();
 
@@ -36,10 +35,6 @@ pub fn TexturePacker(comptime T: anytype, comptime W: i32, comptime H: i32) type
         pub fn pushBitmap(self: *Self, width: i32, height: i32, data: []const T) !RectPos {
             if (width > self.totalWidth or height > self.totalHeight) {
                 return PackerError.bitmapTooLarge;
-            }
-
-            if (width * height != data.len) {
-                return PackerError.dataDismatch;
             }
 
             if ((self.cursor.x + width) > self.totalWidth) {
@@ -90,12 +85,6 @@ test "Texture Packer" {
         const rect = std.mem.zeroes([200 * 200]u8);
         const pos = packer.pushBitmap(200, 200, &rect);
         try expectError(Packer.PackerError.bitmapTooLarge, pos);
-    }
-
-    {
-        const rect = std.mem.zeroes([20 * 20]u8);
-        const pos = packer.pushBitmap(10, 20, &rect);
-        try expectError(Packer.PackerError.dataDismatch, pos);
     }
 
     {
