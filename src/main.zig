@@ -32,7 +32,7 @@ pub fn TexturePacker(comptime T: anytype, comptime W: i32, comptime H: i32) type
 
         /// Push given bitmap into the packer one.
         /// Note: The data size must be width * height.
-        pub fn pushBitmap(self: *Self, width: i32, height: i32, data: []const T) !RectPos {
+        pub fn pushBitmap(self: *Self, width: i32, height: i32, data: [*]const T) !RectPos {
             if (width > self.totalWidth or height > self.totalHeight) {
                 return PackerError.bitmapTooLarge;
             }
