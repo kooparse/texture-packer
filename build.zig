@@ -5,8 +5,7 @@ pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    _ = b.addModule(.{
-        .name = "texture-packer",
+    _ = b.addModule("texture-packer", .{
         .source_file = .{ .path = "src/main.zig" },
     });
 
